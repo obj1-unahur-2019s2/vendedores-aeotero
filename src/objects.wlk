@@ -2,7 +2,6 @@ import ubicacion.*
 import certificacion.*
 
 class Vendedor {
-	var property ubicacion
 	var property certificaciones = #{}
 	
 	method puedeTrabajarEnCiudad(ciudad)
@@ -22,10 +21,10 @@ class Vendedor {
 }
 
 class VendedorFijo inherits Vendedor {
-	const property ciudadVivienda = ""
-
-	override method puedeTrabajarEnCiudad(ciudad){
-		return (ciudadVivienda == ciudad )
+	var property ciudad
+	
+	override method puedeTrabajarEnCiudad(ciudad2){
+		return (ciudad == ciudad2 )
 	}
 	
 	override method esInfluyente(){
@@ -37,21 +36,21 @@ class VendedorViajante inherits Vendedor {
 	var property provinciasHabilitadas = #{}
 	
 	override method puedeTrabajarEnCiudad(ciudad){
-		return (provinciasHabilitadas.any({c => c.ubicacion().ciudad() == ciudad}))
+		return (provinciasHabilitadas.any({c => ciudad.privincia() == c}))
 	}
 	
 	override method esInfluyente(){
-		var poblacion = provinciasHabilitadas.sum({c=> c.ubicacion().poblacionProvincia()})
+		var poblacion = provinciasHabilitadas.sum({c=> c.poblProvincia()})
 		return (poblacion >= 10000000) 
 	}
 	
 }
 
 class ComercioCorresponsal inherits Vendedor {
-	var property sucursales = #{}
+	var property sucursales = #{} // lista de ciudades deonde tienen sucursales
 	
 	override method puedeTrabajarEnCiudad(ciudad){
-		return (sucursales.any({c => c.ubicacion().ciudad() == ciudad}))
+		return (sucursales.any({c => c == ciudad}))
 	}
 	
 	method tieneAlMenos5sucursales(){
@@ -60,7 +59,7 @@ class ComercioCorresponsal inherits Vendedor {
 	
 	method tieneAlMenos3Provincias(){ //devuelve true si la coleccion de provincias es mayor a 3
 		var provincias = #{}
-		sucursales.map({c=> provincias.add(c.ubicacion().provincia())})
+		sucursales.map({c=> provincias.add(c.provincia())})
 		return (provincias.size() >=3)
 	}
 	override method esInfluyente(){

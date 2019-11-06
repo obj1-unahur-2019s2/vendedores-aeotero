@@ -1,6 +1,11 @@
 
-class Ubicacion{
-	var property ciudad = ""
-	var property provincia = ""
-	var property poblacionProvincia = 0
+
+
+class Ciudad {
+	var property provincia
+	
+}
+
+class Provincia{
+	var property poblProvincia = 0
 }
